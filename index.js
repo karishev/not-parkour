@@ -3,12 +3,11 @@ const app = express();
 
 //creating routes by using the routes created in another file
 
-app.use('/', express.static("frontend"));
-
+app.use("/", express.static("frontend"));
 
 //http server
 
-const http = require("http"); 
+const http = require("http");
 const server = http.createServer(app);
 const port = process.envPORT || 3000;
 
@@ -18,7 +17,7 @@ server.listen(port, () => {
 
 //socket.io
 let io = require("socket.io");
-const { type } = require("os");
+
 io = new io.Server(server);
 
 //private room
@@ -70,8 +69,7 @@ io.on("connection", (socket) => {
     room.players[data.player].y = data.y;
 
     io.emit("position", data);
-  })
-  
+  });
 
   socket.on("disconnect", () => {
     room.numberOfPlayers--;
