@@ -2,15 +2,13 @@ const express = require("express");
 const app = express();
 
 //creating routes by using the routes created in another file
-const { routes } = require("./routes");
 
-routes.forEach((route) => {
-  app.use(route.path, express.static(route.page));
-});
+app.use('/', express.static("frontend"));
+
 
 //http server
 
-const http = require("http");
+const http = require("http"); 
 const server = http.createServer(app);
 const port = process.envPORT || 3000;
 
@@ -24,7 +22,7 @@ const { type } = require("os");
 io = new io.Server(server);
 
 //private room
-let private = io.of("/private");
+// let private = io.of("/private");
 
 //all the rooms information
 
