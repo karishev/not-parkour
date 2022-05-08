@@ -9,7 +9,7 @@ app.use("/", express.static("frontend"));
 
 const http = require("http");
 const server = http.createServer(app);
-const port = process.envPORT || 3000;
+const port = process.env.PORT || 3000;
 
 server.listen(port, () => {
   console.log("Server is listenning at port 3000");
