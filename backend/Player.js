@@ -1,8 +1,31 @@
+// class Player {
+//   constructor(xpos, ypos, id) {
+//     this.x = xpos;
+//     this.y = ypos;
+//     this.ground = 560;
+//     this.facing = "right";
+//     this.id = id;
+//   }
+// }
+
+let { map1 } = require("./map1");
+
+function createVector(x, y) {
+  return {
+    x: x,
+    y: y,
+  };
+}
+
+function map(number, inMin, inMax, outMin, outMax) {
+  return ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+}
+
 //all the neede dvariabled for the player class
 class Player {
-  constructor(xpos, ypos, size, ground, num) {
+  constructor(xpos, ypos, size, ground, num, second, blocks) {
     this.position = createVector(xpos, ypos);
-    this.prevPosition = createVector();
+    this.prevPosition = createVector(0, 0);
     this.velocity = createVector(0, 0);
     this.gravity = 0.6;
     this.movement_speed = 5.5;
@@ -14,15 +37,20 @@ class Player {
     this.ground = ground;
     this.onGround = false;
     this.num = num;
+    this.second = second;
+    this.blocks = blocks;
   }
 
   //applying the gravity all the time if the player is not on the ground
   applyGravity() {
     if (!this.onGround) {
-      this.velocity.y = min(this.velocity.y + this.gravity, maxVelocity);
+      this.velocity.y =
+        this.velocity.y + this.gravity < 20
+          ? this.velocity.y + this.gravity
+          : 20;
     }
 
-    let second = game.players[secondPlayer];
+    let second = this.second;
     if (
       this.ground == second.position.y &&
       this.position.y + this.side >= second.position.y &&
@@ -32,11 +60,11 @@ class Player {
       let jumpVal = parseInt(
         map(second.position.x + this.side - this.highestPoint, 0, 600, 0, 22)
       );
-      console.log(
-        parseInt(
-          map(second.position.x + this.side - this.highestPoint, 0, 600, 0, 20)
-        )
-      );
+    //   console.log(
+    //     parseInt(
+    //       map(second.position.x + this.side - this.highestPoint, 0, 600, 0, 20)
+    //     )
+    //   );
       this.jump(jumpVal);
       this.highestPoint = this.ground;
     } else if (this.position.y + this.side >= this.ground) {
@@ -66,20 +94,10 @@ class Player {
     this.onGround = false;
   }
 
-  //finding the angle of the collision to determine the priority
-  findAngle() {
-    let distance = sqrt(
-      pow(this.prevPosition.y - this.position.y, 2) +
-        pow(this.prevPosition.x - this.position.x, 2)
-    );
-
-    return abs(this.prevPosition.y - this.position.y) / distance;
-  }
-
   //checking the horizontal collisions
   checkCollisions() {
-    for (let i = 0; i < game.blocks.length; i++) {
-      const block = game.blocks[i];
+    for (let i = 0; i < this.blocks.length; i++) {
+      const block = this.blocks[i];
 
       // if (
       //   this.position.x + this.side >= block.x &&
@@ -134,8 +152,8 @@ class Player {
 
   findGround() {
     this.applyGravity();
-    for (let i = 0; i < game.blocks.length; i++) {
-      const block = game.blocks[i];
+    for (let i = 0; i < this.blocks.length; i++) {
+      const block = this.blocks[i];
 
       if (
         this.position.x + this.side > block.x &&
@@ -145,11 +163,11 @@ class Player {
         this.ground = block.y;
         break;
       } else {
-        this.ground = game.g;
+        this.ground = 576;
       }
     }
 
-    let second = game.players[secondPlayer];
+    let second = this.second;
     if (
       this.position.y + this.side <= second.position.y &&
       this.position.x + this.side > second.position.x &&
@@ -175,7 +193,7 @@ class Player {
 
     if (
       this.keys.right &&
-      this.position.x + this.side < game.w &&
+      this.position.x + this.side < 1440 &&
       this.onGround
     ) {
       this.velocity.x = this.movement_speed;
@@ -193,26 +211,30 @@ class Player {
       this.jump(this.jump_speed);
     }
 
-    this.position.add(this.velocity);
+    // this.position.add(this.velocity);
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
   }
 
   display() {
-    // this.update();
-
-    this.facing == "right"
-      ? image(
-          charactersRights[this.num],
-          this.position.x,
-          this.position.y,
-          this.side,
-          this.side
-        )
-      : image(
-          charactersLefts[this.num],
-          this.position.x,
-          this.position.y,
-          this.side,
-          this.side
-        );
+    this.update();
+    // console.log(this.ground + `${this.num}`)
+    // this.facing == "right"
+    //   ? image(
+    //       charactersRights[this.num],
+    //       this.position.x,
+    //       this.position.y,
+    //       this.side,
+    //       this.side
+    //     )
+    //   : image(
+    //       charactersLefts[this.num],
+    //       this.position.x,
+    //       this.position.y,
+    //       this.side,
+    //       this.side
+    //     );
   }
 }
+
+module.exports = Player;

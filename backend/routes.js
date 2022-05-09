@@ -1,7 +1,7 @@
 const routes = [
     {
         path: "/",
-        page: "../frontend"
+        page: "./frontend"
     }
 ]
 

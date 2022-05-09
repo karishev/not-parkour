@@ -1,7 +1,7 @@
 //add the socket connection on load of the page
 
 let socket = io();
-let playerNumber;
+let playerNumber = 0;
 let secondPlayer = 0;
 
 window.addEventListener("load", () => {
@@ -42,6 +42,8 @@ let door_top;
 let door_bottom;
 let doorParts = [door_top, door_bottom];
 
+let backGround;
+
 function preload() {
   charactersLefts[1] = loadImage("/images/character2_left.png");
   charactersRights[1] = loadImage("/images/character2_right.png");
@@ -50,36 +52,57 @@ function preload() {
 
   doorParts[0] = loadImage("/images/door_upper.png");
   doorParts[1] = loadImage("/images/door_lower.png");
-  
+
   texture = loadImage("/images/texture.png");
+
+  backGround = loadImage("/images/background.png");
+}
+
+socket.on("heartbeat", (players) => game && updatePlayers(players));
+
+
+let play;
+
+function updatePlayers(players) {
+  game.players[0].position = players.player1;
+  game.players[1].position = players.player2;
+
+  // game.players[secondPlayer].position.x = players[secondPlayer].x;
+  // game.players[secondPlayer].position.y = players[secondPlayer].y;
+  // if (game.players[secondPlayer].ground !== players[secondPlayer].ground)
+  //     game.players[secondPlayer].ground = players[secondPlayer].ground;
+  //   if (game.players[secondPlayer].facing !== players[secondPlayer].facing)
+  //     game.players[secondPlayer].facing = players[secondPlayer].facing;
 }
 
 function setup() {
   createCanvas(wid, hei);
   console.log(dimension);
   game = new Game(height, width, map1, dimension);
-  socket.on("position", (data) => {
-    if (secondPlayer == data.player) {
-      game.players[secondPlayer].position = createVector(data.x, data.y);
-      if (game.players[secondPlayer].ground !== data.ground)
-        game.players[secondPlayer].ground = data.ground;
-      if (game.players[secondPlayer].facing !== data.facing)
-        game.players[secondPlayer].facing = data.facing;
-    }
-  });
+  // socket.on("position", (data) => {
+  //   if (secondPlayer == data.player) {
+  //     game.players[secondPlayer].position.x = data.x;
+  //     game.players[secondPlayer].position.y = data.y;
+  //     if (game.players[secondPlayer].ground !== data.ground)
+  //       game.players[secondPlayer].ground = data.ground;
+  //     if (game.players[secondPlayer].facing !== data.facing)
+  //       game.players[secondPlayer].facing = data.facing;
+  //   }
+  // });
 }
 
 function draw() {
-  background(0);
+  image(backGround, 0, 0, wid, hei);
+  // background(0);
   game.display();
 
-  let data = {
-    player: playerNumber,
-    x: game.players[playerNumber].position.x,
-    y: game.players[playerNumber].position.y,
-    ground: game.players[playerNumber].ground,
-    facing: game.players[playerNumber].facing,
-  };
+  // let data = {
+  //   player: playerNumber,
+  //   x: game.players[playerNumber].position.x,
+  //   y: game.players[playerNumber].position.y,
+  //   ground: game.players[playerNumber].ground,
+  //   facing: game.players[playerNumber].facing,
+  // };
 
-  socket.emit("position", data);
+  // socket.emit("position", data);
 }
