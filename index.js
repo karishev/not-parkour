@@ -49,12 +49,6 @@ let rooms = {};
 const wid = 1440;
 const hei = 770;
 
-// const dimension = {
-//   blockSize: 57.6,
-//   ground: 576,
-//   playerSize: 50,
-// };
-
 // let room = {
 //   numberOfPlayers: 0,
 //   roomNumber: 1,
@@ -62,6 +56,8 @@ const hei = 770;
 //   players: [],
 //   game: new Game(hei, wid, map1),
 // };
+
+let interval;
 
 //Listen for users connecting to main page
 io.on("connection", (socket) => {
@@ -72,7 +68,6 @@ io.on("connection", (socket) => {
       console.log(data);
       if (rooms[data.room] != null && rooms[data.room].numberOfPlayers < 2) {
         io.to(data.id).emit("checkedRoom", { create: "yes" });
-        // rooms[data.room].push({ id: data.id });
       } else if (
         rooms[data.room] != null &&
         rooms[data.room].numberOfPlayers == 2
@@ -92,12 +87,15 @@ io.on("connection", (socket) => {
       } else {
         io.to(data.id).emit("createdRoom", { create: "yes" });
         rooms[data.room] = {
-          numberOfPlayers: 1,
+          numberOfPlayers: 0,
           roomNumber: data.room,
           currentLvl: 1,
           players: [],
           game: new Game(hei, wid, map1),
         };
+        interval = setInterval(() => {
+          updateGame(data.room);
+        }, 1000 / 60);
       }
     }
   });
@@ -108,41 +106,43 @@ io.on("connection", (socket) => {
   });
 });
 
-let interval;
 roomSocket.on("connection", (socket) => {
   console.log("We have a new client: " + socket.id);
-  if (rooms[socket.room] == null)
-    rooms[socket.room] = {
-      numberOfPlayers: 1,
-      roomNumber: socket.room,
-      currentLvl: 1,
-      players: [],
-      game: new Game(hei, wid, map1),
-    };
+  if (socket.room && rooms[socket.room] == null) {
+    roomSocket.in(socket.room).emit("roomEnded");
 
-  interval = setInterval(() => {
-    updateGame(socket.room);
-  }, 1000 / 60);
-
+    // interval = setInterval(() => {
+    //   updateGame(socket.room);
+    // }, 1000 / 60);
+    // rooms[socket.room] = {
+    //   numberOfPlayers: 1,
+    //   roomNumber: socket.room,
+    //   currentLvl: 1,
+    //   players: [],
+    //   game: new Game(hei, wid, map1),
+    // };
+  } else if (rooms[socket.room]) rooms[socket.room].numberOfPlayers++;
   socket.on("room", function (data) {
     let roomName = data.room;
     //Add this socket to the room
     socket.join(roomName);
     //Add a room property to the individual socket
     socket.room = roomName;
-    if (rooms[socket.room] == null)
-      rooms[socket.room] = {
-        numberOfPlayers: 1,
-        roomNumber: data.room,
-        currentLvl: 1,
-        players: [],
-        game: new Game(hei, wid, map1),
-      };
-    else rooms[socket.room].numberOfPlayers++;
-
-    roomSocket.to(socket.id).emit("playerConnected", {
-      connected: rooms[socket.room].numberOfPlayers,
-    });
+    if (rooms[socket.room] == null) roomSocket.in(data.room).emit("roomEnded");
+    // rooms[socket.room] = {
+    //   numberOfPlayers: 1,
+    //   roomNumber: data.room,
+    //   currentLvl: 1,
+    //   players: [],
+    //   game: new Game(hei, wid, map1),
+    // };
+    // else rooms[socket.room].numberOfPlayers++;
+    else {
+      rooms[socket.room].numberOfPlayers++;
+      roomSocket.to(socket.id).emit("playerConnected", {
+        connected: rooms[socket.room].numberOfPlayers,
+      });
+    }
   });
 
   socket.on("keyPressed", (data) => {
@@ -171,11 +171,16 @@ roomSocket.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    rooms[socket.room].numberOfPlayers--;
+    rooms[socket.room] && rooms[socket.room].numberOfPlayers--;
+    rooms[socket.room]
+      ? (rooms[socket.room].players = rooms[socket.room].players.filter(
+          (player) => player.id !== socket.id
+        ))
+      : "";
+    delete rooms[socket.room];
+
     // io.sockets.emit("disconnect", socket.id);
-    rooms[socket.room].players = rooms[socket.room].players.filter(
-      (player) => player.id !== socket.id
-    );
+    roomSocket.in(socket.room).emit("roomEnded", { ended: true });
     clearInterval(interval);
   });
 });

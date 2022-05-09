@@ -6,6 +6,11 @@ let secondPlayer = 0;
 
 window.addEventListener("load", () => {
   socket.on("connect", () => {
+    socket.on("roomEnded", () => {
+      let loc = String(window.location.href);
+      window.location.href = loc.slice(0, loc.indexOf("room"));
+      //one of the players disconnected, therefore, the game ended and now we need to get out of the room
+    });
     roomNumber = sessionStorage.getItem("room");
     socket.emit("room", { room: roomNumber });
     socket.on("playerConnected", (data) => {
@@ -86,17 +91,19 @@ function setup() {
   console.log(dimension);
   game = new Game(height, width, map1, dimension);
   socket.on("heartbeat", (players) => game && updatePlayers(players));
-
-  // socket.on("position", (data) => {
-  //   if (secondPlayer == data.player) {
-  //     game.players[secondPlayer].position.x = data.x;
-  //     game.players[secondPlayer].position.y = data.y;
-  //     if (game.players[secondPlayer].ground !== data.ground)
-  //       game.players[secondPlayer].ground = data.ground;
-  //     if (game.players[secondPlayer].facing !== data.facing)
-  //       game.players[secondPlayer].facing = data.facing;
-  //   }
-  // });
+  socket.on("roomEnded", () => {
+    let loc = String(window.location.href);
+    console.log(loc);
+    console.log(loc.slice(0, loc.indexOf("room")));
+    window.location.href = loc.slice(0, loc.indexOf("room"));
+    //one of the players disconnected, therefore, the game ended and now we need to get out of the room
+  });
+  socket.on("disconnect", () => {
+    let loc = String(window.location.href);
+    console.log(loc);
+    console.log(loc.slice(0, loc.indexOf("room")));
+    window.location.href = loc.slice(0, loc.indexOf("room"));
+  });
 }
 
 function draw() {
