@@ -8,7 +8,7 @@
 //   }
 // }
 
-let { map1 } = require("./map1");
+let { map1 } = require("../map1");
 
 function createVector(x, y) {
   return {
@@ -39,6 +39,7 @@ class Player {
     this.num = num;
     this.second = second;
     this.blocks = blocks;
+    this.key = false;
   }
 
   //applying the gravity all the time if the player is not on the ground
@@ -51,20 +52,24 @@ class Player {
     }
 
     let second = this.second;
+
+    //checking if the player one is on top of the other player and then the trampoline ability starts to work
     if (
       this.ground == second.position.y &&
       this.position.y + this.side >= second.position.y &&
       this.position.x + this.side >= second.position.x &&
-      this.position.x <= second.position.x + second.side
+      this.position.x <= second.position.x + second.side &&
+      second.num == 0
     ) {
       let jumpVal = parseInt(
-        map(second.position.x + this.side - this.highestPoint, 0, 600, 0, 22)
+        map(second.position.y + this.side - this.highestPoint, 0, 500, 6, 22)
       );
-    //   console.log(
-    //     parseInt(
-    //       map(second.position.x + this.side - this.highestPoint, 0, 600, 0, 20)
-    //     )
-    //   );
+      //   console.log(second.position.y + this.side, this.highestPoint)
+      //   console.log(
+      //     parseInt(
+      //       map(second.position.y + this.side - this.highestPoint, 0, 600, 0, 32)
+      //     )
+      //   );
       this.jump(jumpVal);
       this.highestPoint = this.ground;
     } else if (this.position.y + this.side >= this.ground) {
@@ -98,6 +103,9 @@ class Player {
   checkCollisions() {
     for (let i = 0; i < this.blocks.length; i++) {
       const block = this.blocks[i];
+
+      //10 is for skipping and not displaying
+      if (block.type === 10) continue;
 
       // if (
       //   this.position.x + this.side >= block.x &&
@@ -134,6 +142,11 @@ class Player {
         if (block.row - 1 >= 0 && map1[block.row - 1][block.col] == 1) {
           this.velocity.x = 0;
         }
+        //checking if we touch the key
+        if (block.type == 2) {
+          this.key = true;
+          block.type = 10;
+        }
 
         // left
       } else if (
@@ -146,6 +159,11 @@ class Player {
         if (block.row - 1 >= 0 && map1[block.row - 1][block.col] == 1) {
           this.velocity.x = 0;
         }
+        //checking if we touch the key
+        if (block.type == 2) {
+          this.key = true;
+          block.type = 10;
+        }
       }
     }
   }
@@ -154,7 +172,8 @@ class Player {
     this.applyGravity();
     for (let i = 0; i < this.blocks.length; i++) {
       const block = this.blocks[i];
-
+      //10 is for skipping and not displaying
+      if (block.type === 10) continue;
       if (
         this.position.x + this.side > block.x &&
         this.position.x < block.x + block.side &&
@@ -173,7 +192,7 @@ class Player {
       this.position.x + this.side > second.position.x &&
       this.position.x < second.position.x + second.side
     ) {
-      if (this.ground > second.position.y) {
+      if (this.ground >= second.position.y) {
         this.ground = second.position.y;
       }
     }

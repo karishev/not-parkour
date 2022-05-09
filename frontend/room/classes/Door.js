@@ -1,7 +1,7 @@
 class Door extends Block {
   constructor(xpos, ypos, size, part) {
     super(xpos, ypos, size);
-    this.type = 5;
+    this.type = 3;
     this.part = part;
   }
 
