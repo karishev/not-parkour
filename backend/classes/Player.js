@@ -52,7 +52,7 @@ class Player {
       second.num == 0
     ) {
       let jumpVal = parseInt(
-        map(second.position.y + this.side - this.highestPoint, 0, 500, 5, 15)
+        map(second.position.y + this.side - this.highestPoint, 0, 500, 6, 22)
       );
       //   console.log(second.position.y + this.side, this.highestPoint)
       //   console.log(
