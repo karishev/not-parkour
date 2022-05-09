@@ -17,9 +17,9 @@ class Player {
     this.position = createVector(xpos, ypos);
     this.prevPosition = createVector(0, 0);
     this.velocity = createVector(0, 0);
-    this.gravity = 0.25;
-    this.movement_speed = 3.8;
-    this.jump_speed = num == 1 ? 7 : 6;
+    this.gravity = 0.6;
+    this.movement_speed = 5.5;
+    this.jump_speed = num == 1 ? 11 : 9;
     this.side = size;
     this.highestPoint = ground;
     this.keys = { right: false, left: false, jump: false };
@@ -78,10 +78,10 @@ class Player {
   //giving the directions of the jump based on the keys pressed
   jump(speed) {
     if (this.keys.left) {
-      this.velocity = createVector(-3.8, -speed);
+      this.velocity = createVector(-this.movement_speed, -speed);
       this.facing = "left";
     } else if (this.keys.right) {
-      this.velocity = createVector(3.8, -speed);
+      this.velocity = createVector(this.movement_speed, -speed);
       this.facing = "right";
     } else {
       this.velocity = createVector(0, -speed);
