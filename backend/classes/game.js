@@ -82,9 +82,6 @@ class Game {
     this.players.forEach((player) => {
       player.display();
     });
-    // fill(200);
-    // noStroke();
-    // rect(0, this.g, this.w, this.h - this.g);
   }
 }
 

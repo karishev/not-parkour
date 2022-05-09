@@ -1,13 +1,3 @@
-// class Player {
-//   constructor(xpos, ypos, id) {
-//     this.x = xpos;
-//     this.y = ypos;
-//     this.ground = 560;
-//     this.facing = "right";
-//     this.id = id;
-//   }
-// }
-
 let { map1 } = require("../map1");
 
 function createVector(x, y) {
@@ -27,9 +17,9 @@ class Player {
     this.position = createVector(xpos, ypos);
     this.prevPosition = createVector(0, 0);
     this.velocity = createVector(0, 0);
-    this.gravity = 0.6;
-    this.movement_speed = 5.5;
-    this.jump_speed = num == 1 ? 11 : 9;
+    this.gravity = 0.25;
+    this.movement_speed = 3.8;
+    this.jump_speed = num == 1 ? 7 : 6;
     this.side = size;
     this.highestPoint = ground;
     this.keys = { right: false, left: false, jump: false };
@@ -62,7 +52,7 @@ class Player {
       second.num == 0
     ) {
       let jumpVal = parseInt(
-        map(second.position.y + this.side - this.highestPoint, 0, 500, 6, 22)
+        map(second.position.y + this.side - this.highestPoint, 0, 500, 5, 15)
       );
       //   console.log(second.position.y + this.side, this.highestPoint)
       //   console.log(
@@ -88,10 +78,10 @@ class Player {
   //giving the directions of the jump based on the keys pressed
   jump(speed) {
     if (this.keys.left) {
-      this.velocity = createVector(-this.movement_speed, -speed);
+      this.velocity = createVector(-3.8, -speed);
       this.facing = "left";
     } else if (this.keys.right) {
-      this.velocity = createVector(this.movement_speed, -speed);
+      this.velocity = createVector(3.8, -speed);
       this.facing = "right";
     } else {
       this.velocity = createVector(0, -speed);
@@ -106,17 +96,6 @@ class Player {
 
       //10 is for skipping and not displaying
       if (block.type === 10) continue;
-
-      // if (
-      //   this.position.x + this.side >= block.x &&
-      //   this.position.x <= block.x + block.side &&
-      //   this.position.y <= block.y + block.side &&
-      //   this.position.y + this.side >= block.y &&
-      //   !this.onGround
-      // ) {
-      //   let k = this.findAngle();
-      //   if (k > 0.8 && k < 0.95) console.log(k);
-      // }
 
       // up
       if (
@@ -201,14 +180,6 @@ class Player {
   update() {
     this.findGround();
     this.checkCollisions();
-    // if (!this.onGround) {
-    //   let distance = sqrt(
-    //     pow(this.prevPosition.y - this.position.y, 2) +
-    //       pow(this.prevPosition.x - this.position.x, 2)
-    //   );
-
-    //   console.log(abs(this.prevPosition.y - this.position.y) / distance);
-    // }
 
     if (
       this.keys.right &&
@@ -237,22 +208,6 @@ class Player {
 
   display() {
     this.update();
-    // console.log(this.ground + `${this.num}`)
-    // this.facing == "right"
-    //   ? image(
-    //       charactersRights[this.num],
-    //       this.position.x,
-    //       this.position.y,
-    //       this.side,
-    //       this.side
-    //     )
-    //   : image(
-    //       charactersLefts[this.num],
-    //       this.position.x,
-    //       this.position.y,
-    //       this.side,
-    //       this.side
-    //     );
   }
 }
 

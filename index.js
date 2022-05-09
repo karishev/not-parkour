@@ -107,13 +107,9 @@ io.on("connection", (socket) => {
     console.log("A client has disconnected: " + socket.id);
   });
 });
+
 let interval;
 roomSocket.on("connection", (socket) => {
-  // room.players.push(new Player(30, 30, socket.id));
-  // room.numberOfPlayers === 1
-  //   ? (room.players[0].socketID = socket.id)
-  //   : (room.players[1].socketID = socket.id);
-
   console.log("We have a new client: " + socket.id);
   if (rooms[socket.room] == null)
     rooms[socket.room] = {
@@ -123,12 +119,12 @@ roomSocket.on("connection", (socket) => {
       players: [],
       game: new Game(hei, wid, map1),
     };
+
   interval = setInterval(() => {
     updateGame(socket.room);
   }, 1000 / 60);
 
   socket.on("room", function (data) {
-    console.log("room");
     let roomName = data.room;
     //Add this socket to the room
     socket.join(roomName);
@@ -143,8 +139,6 @@ roomSocket.on("connection", (socket) => {
         game: new Game(hei, wid, map1),
       };
     else rooms[socket.room].numberOfPlayers++;
-    //Let everyone in the room know that a new user has joined
-    // let joinMsg = "A new user has joined the chat room: " + roomName;
 
     roomSocket.to(socket.id).emit("playerConnected", {
       connected: rooms[socket.room].numberOfPlayers,

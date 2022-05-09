@@ -67,7 +67,6 @@ function preload() {
 socket.on("heartbeat", (players) => game && updatePlayers(players));
 
 function updatePlayers(players) {
-  console.log("received")
   game.players[0].position = players.player1.pos;
   game.players[0].facing = players.player1.facing;
   game.players[1].position = players.player2.pos;
