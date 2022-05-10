@@ -11,7 +11,7 @@ class Game {
     ];
     this.blocks = this.initializeMap(maps[0]);
     this.key = false;
-    this.started = true; //
+    this.started = false; //
     this.maps = maps;
     this.currentLvl = 0;
   }
@@ -50,19 +50,30 @@ class Game {
     return dummy;
   }
 
-  //choosing a player screen
-  choosingPlayer() {
+  //waiting for players screen
+  waiting() {
+    let num = 70;
     fill(255);
-    square(40, 40, (wid - 160) / 2);
-    square((wid - 80) / 2 + 80, 40, (wid - 160) / 2);
-    image(charactersRights[0], 120, 120, (wid - 480) / 2, (wid - 480) / 2);
+    square(num, num, (wid - num * 4) / 2);
+    square((wid - num * 2) / 2 + num * 2, num, (wid - num * 4) / 2);
+    image(
+      charactersRights[0],
+      num * 3,
+      num * 3,
+      (wid - num * 12) / 2,
+      (wid - num * 12) / 2
+    );
     image(
       charactersLefts[1],
-      (wid - 240) / 2 + 240,
-      120,
-      (wid - 480) / 2,
-      (wid - 480) / 2
+      (wid - num * 6) / 2 + num * 6,
+      num * 3,
+      (wid - num * 12) / 2,
+      (wid - num * 12) / 2
     );
+
+    playerNumber == 0
+      ? image(mainFont, num * 4, num * 8, num * 2, num)
+      : image(mainFont, wid - num * 6, num * 8, num * 2, num);
   }
 
   reset() {
@@ -73,7 +84,7 @@ class Game {
 
   //displaying all the game elements
   display() {
-    !this.started && this.choosingPlayer();
+    !this.started && this.waiting();
 
     this.started &&
       this.players.forEach((player) => {

@@ -54,6 +54,8 @@ let keyImage;
 
 let backGround;
 
+let mainFont;
+
 function preload() {
   charactersLefts[1] = loadImage("/room/images/character2_left.png");
   charactersRights[1] = loadImage("/room/images/character2_right.png");
@@ -70,6 +72,8 @@ function preload() {
   keyImage = loadImage("/room/images/key.png");
 
   backGround = loadImage("/room/images/background.png");
+
+  mainFont = loadImage("/room/images/you.png");
 }
 
 socket.on("heartbeat", (players) => game && updatePlayers(players));
@@ -90,6 +94,11 @@ function updatePlayers(players) {
     alert("game finished");
     count++;
   }
+  if (!game.started && players.num == 2) {
+    let damn = setTimeout(() => {
+      game.started = true;
+    }, 3000);
+  }
 }
 
 function setup() {
@@ -97,21 +106,26 @@ function setup() {
   console.log(dimension);
   game = new Game(height, width, maps, dimension);
   socket.on("heartbeat", (players) => game && updatePlayers(players));
+
+  //if the room ends of one of the players disconnects we move them back to the main menu,
+  //since it would be impossible to reconnect to the room
   socket.on("roomEnded", () => {
     let loc = String(window.location.href);
     window.location.href = loc.slice(0, loc.indexOf("room"));
     //one of the players disconnected, therefore, the game ended and now we need to get out of the room
   });
+
   socket.on("disconnect", () => {
     let loc = String(window.location.href);
     window.location.href = loc.slice(0, loc.indexOf("room"));
   });
 
-  socket.on("chosenCharacters", (data) => {
-    console.log(data);
-    playerNumber = data.player;
-    secondPlayer = data.player == 1 ? 0 : 1;
-  });
+  //if there are 2 players in the room, we can start the game
+  // socket.on("startGame", () => {
+  //   setTimeout(() => {
+  //     game.started = true;
+  //   }, 3000);
+  // });
 }
 
 function draw() {

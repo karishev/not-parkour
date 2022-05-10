@@ -129,34 +129,6 @@ roomSocket.on("connection", (socket) => {
     }
   });
 
-  // socket.on("choosingCharacter", (data) => {
-  //   if (data.mousePos > 1440 / 2) {
-  //     if (!rooms[socket.room].game.players[1].id) {
-  //       rooms[socket.room].game.players[1].id = socket.id;
-  //       roomSocket.to(socket.id).emit("chosenCharacters", {
-  //         player: 1,
-  //       });
-  //     } else {
-  //       rooms[socket.room].game.players[0].id = socket.id;
-  //       roomSocket.to(socket.id).emit("chosenCharacters", {
-  //         player: 0,
-  //       });
-  //     }
-  //   } else {
-  //     if (!rooms[socket.room].game.players[0].id) {
-  //       rooms[socket.room].game.players[0].id = socket.id;
-  //       roomSocket.to(socket.id).emit("chosenCharacters", {
-  //         player: 0,
-  //       });
-  //     } else {
-  //       rooms[socket.room].game.players[1].id = socket.id;
-  //       roomSocket.to(socket.id).emit("chosenCharacters", {
-  //         player: 1,
-  //       });
-  //     }
-  //   }
-  // });
-
   socket.on("keyPressed", (data) => {
     // console.log(rooms[socket.room].game.players[0].position);
     if (data.key == "d" || data.key == "D" || data.key == "ArrowRight") {
@@ -233,6 +205,7 @@ function updateGame(roomName) {
       key: rooms[roomName].game.key,
       lvl: rooms[roomName].game.currentMap,
       end: rooms[roomName].game.gameEnded,
+      num: rooms[roomName].numberOfPlayers,
     });
 
   rooms[roomName] && rooms[roomName].game.display();
