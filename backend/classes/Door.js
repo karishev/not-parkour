@@ -16,5 +16,4 @@ class Door extends Block {
   }
 }
 
-
 module.exports = Door;

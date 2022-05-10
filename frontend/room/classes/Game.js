@@ -1,5 +1,5 @@
 class Game {
-  constructor(h, w, map, dimension) {
+  constructor(h, w, maps, dimension) {
     // this.g = (h / 3) * 2;
     this.size = dimension.blockSize;
     this.g = dimension.ground;
@@ -9,8 +9,11 @@ class Game {
       new Player(30, 30, dimension.playerSize, dimension.ground, 0),
       new Player(30, 30, dimension.playerSize, dimension.ground, 1),
     ];
-    this.blocks = this.initializeMap(map);
+    this.blocks = this.initializeMap(maps[0]);
     this.key = false;
+    this.started = true; //
+    this.maps = maps;
+    this.currentLvl = 0;
   }
 
   //initializing the blocks into the array given the number in the map
@@ -47,19 +50,42 @@ class Game {
     return dummy;
   }
 
+  //choosing a player screen
+  choosingPlayer() {
+    fill(255);
+    square(40, 40, (wid - 160) / 2);
+    square((wid - 80) / 2 + 80, 40, (wid - 160) / 2);
+    image(charactersRights[0], 120, 120, (wid - 480) / 2, (wid - 480) / 2);
+    image(
+      charactersLefts[1],
+      (wid - 240) / 2 + 240,
+      120,
+      (wid - 480) / 2,
+      (wid - 480) / 2
+    );
+  }
+
+  reset() {
+    this.blocks = this.initializeMap(this.maps[this.currentLvl]);
+    this.key = false;
+    this.lvlFinished = false;
+  }
+
   //displaying all the game elements
   display() {
-    this.blocks.forEach((block) => {
-      if (block.type == 2 && this.key) block.type = 10;
-      else if (block.type == 4 && this.key) block.type = 10;
-      else if (block.type != 10) block.display();
-    });
+    !this.started && this.choosingPlayer();
 
-    this.players.forEach((player) => {
-      player.display();
-    });
-    fill(200);
-    noStroke();
-    // rect(0, this.g, this.w, this.h - this.g);
+    this.started &&
+      this.players.forEach((player) => {
+        player.display();
+      });
+
+    this.started &&
+      this.blocks.forEach((block) => {
+        if (block.type == 2 && this.key) block.type = 10;
+        else if (block.type == 3 && this.key) block.type = 25;
+        else if (block.type == 4 && this.key) block.type = 10;
+        else if (block.type != 10) block.display();
+      });
   }
 }

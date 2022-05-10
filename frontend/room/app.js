@@ -1,8 +1,8 @@
 //add the socket connection on load of the page
 
 let socket = io("/room");
-let playerNumber = 0;
-let secondPlayer = 0;
+let playerNumber = -1;
+let secondPlayer = -1;
 
 window.addEventListener("load", () => {
   socket.on("connect", () => {
@@ -48,6 +48,7 @@ let texture;
 let door_top;
 let door_bottom;
 let doorParts = [door_top, door_bottom];
+let doorOpen;
 
 let keyImage;
 
@@ -61,6 +62,8 @@ function preload() {
 
   doorParts[0] = loadImage("/room/images/door_upper.png");
   doorParts[1] = loadImage("/room/images/door_lower.png");
+
+  doorOpen = loadImage("/room/images/door_open.png");
 
   texture = loadImage("/room/images/texture.png");
 
@@ -77,32 +80,31 @@ function updatePlayers(players) {
   game.players[1].position = players.player2.pos;
   game.players[1].facing = players.player2.facing;
   game.key = players.key;
-
-  // game.players[secondPlayer].position.x = players[secondPlayer].x;
-  // game.players[secondPlayer].position.y = players[secondPlayer].y;
-  // if (game.players[secondPlayer].ground !== players[secondPlayer].ground)
-  //     game.players[secondPlayer].ground = players[secondPlayer].ground;
-  //   if (game.players[secondPlayer].facing !== players[secondPlayer].facing)
-  //     game.players[secondPlayer].facing = players[secondPlayer].facing;
+  if (game.currentLvl != players.lvl) {
+    game.currentLvl = players.lvl;
+    game.reset();
+  }
 }
 
 function setup() {
   createCanvas(wid, hei);
   console.log(dimension);
-  game = new Game(height, width, map1, dimension);
+  game = new Game(height, width, maps, dimension);
   socket.on("heartbeat", (players) => game && updatePlayers(players));
   socket.on("roomEnded", () => {
     let loc = String(window.location.href);
-    console.log(loc);
-    console.log(loc.slice(0, loc.indexOf("room")));
     window.location.href = loc.slice(0, loc.indexOf("room"));
     //one of the players disconnected, therefore, the game ended and now we need to get out of the room
   });
   socket.on("disconnect", () => {
     let loc = String(window.location.href);
-    console.log(loc);
-    console.log(loc.slice(0, loc.indexOf("room")));
     window.location.href = loc.slice(0, loc.indexOf("room"));
+  });
+
+  socket.on("chosenCharacters", (data) => {
+    console.log(data);
+    playerNumber = data.player;
+    secondPlayer = data.player == 1 ? 0 : 1;
   });
 }
 
@@ -110,14 +112,11 @@ function draw() {
   image(backGround, 0, 0, wid, hei);
   // background(0);
   game.display();
+}
 
-  // let data = {
-  //   player: playerNumber,
-  //   x: game.players[playerNumber].position.x,
-  //   y: game.players[playerNumber].position.y,
-  //   ground: game.players[playerNumber].ground,
-  //   facing: game.players[playerNumber].facing,
-  // };
-
-  // socket.emit("position", data);
+function mouseClicked() {
+  !game.started &&
+    socket.emit("choosingCharacter", {
+      mousePos: mouseX,
+    });
 }

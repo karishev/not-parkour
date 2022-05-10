@@ -10,7 +10,8 @@ routes.forEach((route) => {
 
 // let Player = require("./Player");
 let Game = require("./backend/classes/game");
-const { map1 } = require("./backend/map1");
+// const { map1 } = require("./backend/map1");
+const { maps } = require("./backend/maps");
 //http server
 
 const http = require("http");
@@ -91,7 +92,7 @@ io.on("connection", (socket) => {
           roomNumber: data.room,
           currentLvl: 1,
           players: [],
-          game: new Game(hei, wid, map1),
+          game: new Game(hei, wid, maps),
         };
         interval = setInterval(() => {
           updateGame(data.room);
@@ -128,7 +129,10 @@ roomSocket.on("connection", (socket) => {
     socket.join(roomName);
     //Add a room property to the individual socket
     socket.room = roomName;
-    if (rooms[socket.room] == null) roomSocket.in(data.room).emit("roomEnded");
+    if (rooms[socket.room] == null) {
+      roomSocket.in(data.room).emit("roomEnded");
+      clearInterval(interval);
+    }
     // rooms[socket.room] = {
     //   numberOfPlayers: 1,
     //   roomNumber: data.room,
@@ -145,27 +149,65 @@ roomSocket.on("connection", (socket) => {
     }
   });
 
+  // socket.on("choosingCharacter", (data) => {
+  //   if (data.mousePos > 1440 / 2) {
+  //     if (!rooms[socket.room].game.players[1].id) {
+  //       rooms[socket.room].game.players[1].id = socket.id;
+  //       roomSocket.to(socket.id).emit("chosenCharacters", {
+  //         player: 1,
+  //       });
+  //     } else {
+  //       rooms[socket.room].game.players[0].id = socket.id;
+  //       roomSocket.to(socket.id).emit("chosenCharacters", {
+  //         player: 0,
+  //       });
+  //     }
+  //   } else {
+  //     if (!rooms[socket.room].game.players[0].id) {
+  //       rooms[socket.room].game.players[0].id = socket.id;
+  //       roomSocket.to(socket.id).emit("chosenCharacters", {
+  //         player: 0,
+  //       });
+  //     } else {
+  //       rooms[socket.room].game.players[1].id = socket.id;
+  //       roomSocket.to(socket.id).emit("chosenCharacters", {
+  //         player: 1,
+  //       });
+  //     }
+  //   }
+  // });
+
   socket.on("keyPressed", (data) => {
     // console.log(rooms[socket.room].game.players[0].position);
-    if (data.key == "d" || data.key == "D") {
+    if (data.key == "d" || data.key == "D" || data.key == "ArrowRight") {
       rooms[socket.room].game.players[data.player].keys.right = true;
     }
-    if (data.key == "a" || data.key == "A") {
+    if (data.key == "a" || data.key == "A" || data.key == "ArrowLeft") {
       rooms[socket.room].game.players[data.player].keys.left = true;
     }
-    if (data.key == "w" || data.key == "W") {
+    if (
+      data.key == "w" ||
+      data.key == "W" ||
+      data.key == "ArrowUp" ||
+      data.key == " "
+    ) {
       rooms[socket.room].game.players[data.player].keys.jump = true;
     }
   });
 
   socket.on("keyReleased", (data) => {
-    if (data.key == "d" || data.key == "D") {
+    if (data.key == "d" || data.key == "D" || data.key == "ArrowRight") {
       rooms[socket.room].game.players[data.player].keys.right = false;
     }
-    if (data.key == "a" || data.key == "A") {
+    if (data.key == "a" || data.key == "A" || data.key == "ArrowLeft") {
       rooms[socket.room].game.players[data.player].keys.left = false;
     }
-    if (data.key == "w" || data.key == "W") {
+    if (
+      data.key == "w" ||
+      data.key == "W" ||
+      data.key == "ArrowUp" ||
+      data.key == " "
+    ) {
       rooms[socket.room].game.players[data.player].keys.jump = false;
     }
   });
@@ -186,16 +228,19 @@ roomSocket.on("connection", (socket) => {
 });
 // console.log(room.game.players[0].ground);
 function updateGame(roomName) {
-  roomSocket.in(roomName).emit("heartbeat", {
-    player1: {
-      pos: rooms[roomName].game.players[0].position,
-      facing: rooms[roomName].game.players[0].facing,
-    },
-    player2: {
-      pos: rooms[roomName].game.players[1].position,
-      facing: rooms[roomName].game.players[1].facing,
-    },
-    key: rooms[roomName].game.key,
-  });
-  rooms[roomName].game.display();
+  rooms[roomName] &&
+    roomSocket.in(roomName).emit("heartbeat", {
+      player1: {
+        pos: rooms[roomName].game.players[0].position,
+        facing: rooms[roomName].game.players[0].facing,
+      },
+      player2: {
+        pos: rooms[roomName].game.players[1].position,
+        facing: rooms[roomName].game.players[1].facing,
+      },
+      key: rooms[roomName].game.key,
+      lvl: rooms[roomName].game.currentMap,
+    });
+
+  rooms[roomName] && rooms[roomName].game.display();
 }

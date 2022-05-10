@@ -1,5 +1,3 @@
-let { map1 } = require("../map1");
-
 function createVector(x, y) {
   return {
     x: x,
@@ -30,6 +28,9 @@ class Player {
     this.second = second;
     this.blocks = blocks;
     this.key = false;
+    this.id;
+    this.map;
+    this.indoor = false;
   }
 
   //applying the gravity all the time if the player is not on the ground
@@ -106,6 +107,10 @@ class Player {
         !this.onGround &&
         this.velocity.y < 0
       ) {
+        if (block.type == 11) {
+          this.indoor = true;
+          continue;
+        }
         this.position.y = block.y + block.side;
         this.velocity.y = 0;
       }
@@ -117,8 +122,12 @@ class Player {
         this.position.y + this.side > block.y &&
         this.position.y < block.y + block.side
       ) {
+        if (block.type == 11) {
+          this.indoor = true;
+          continue;
+        }
         this.position.x = block.x - this.side;
-        if (block.row - 1 >= 0 && map1[block.row - 1][block.col] == 1) {
+        if (block.row - 1 >= 0 && this.map[block.row - 1][block.col] != 0) {
           this.velocity.x = 0;
         }
         //checking if we touch the key
@@ -134,8 +143,12 @@ class Player {
         this.position.y + this.side > block.y &&
         this.position.y < block.y + block.side
       ) {
+        if (block.type == 11) {
+          this.indoor = true;
+          continue;
+        }
         this.position.x = block.x + block.side;
-        if (block.row - 1 >= 0 && map1[block.row - 1][block.col] == 1) {
+        if (block.row - 1 >= 0 && this.map[block.row - 1][block.col] != 0) {
           this.velocity.x = 0;
         }
         //checking if we touch the key
@@ -152,7 +165,7 @@ class Player {
     for (let i = 0; i < this.blocks.length; i++) {
       const block = this.blocks[i];
       //10 is for skipping and not displaying
-      if (block.type === 10) continue;
+      if (block.type === 10 || block.type === 11) continue;
       if (
         this.position.x + this.side > block.x &&
         this.position.x < block.x + block.side &&

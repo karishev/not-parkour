@@ -3,6 +3,7 @@ class Door extends Block {
     super(xpos, ypos, size);
     this.type = 3;
     this.part = part;
+    this.opened = false;
   }
 
   // update() {
@@ -10,12 +11,9 @@ class Door extends Block {
   // }
 
   display() {
-    image(
-        doorParts[this.part],
-        this.x,
-        this.y,
-        this.side,
-        this.side
-    )
+    if (this.type == 25) {
+      fill(255);
+      rect(this.x, this.y, this.side, this.side);
+    } else image(doorParts[this.part], this.x, this.y, this.side, this.side);
   }
 }

@@ -1,11 +1,13 @@
 function keyPressed() {
-  socket.emit("keyPressed", { player: playerNumber, key: key });
+  game.started && socket.emit("keyPressed", { player: playerNumber, key: key });
   switch (keyCode) {
     case LEFT_ARROW:
       game.players[playerNumber].keys.left = true;
       break;
     case RIGHT_ARROW:
       game.players[playerNumber].keys.right = true;
+      break;
+    case BACKSPACE:
       break;
     default:
       break;
@@ -27,7 +29,8 @@ function keyPressed() {
 }
 
 function keyReleased() {
-  socket.emit("keyReleased", { player: playerNumber, key: key });
+  game.started &&
+    socket.emit("keyReleased", { player: playerNumber, key: key });
   switch (keyCode) {
     case LEFT_ARROW:
       game.players[playerNumber].keys.left = false;
