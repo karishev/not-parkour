@@ -27,6 +27,7 @@ class Game {
     this.blocks = this.initializeMap(maps[this.currentMap]);
     this.key = false;
     this.lvlFinished = false;
+    this.gameEnded = false;
   }
 
   //initializing the blocks into the array given the number in the map
@@ -86,13 +87,15 @@ class Game {
 
     if (this.lvlFinished) {
       this.currentMap += 1;
-      this.reset();
+      if (this.currentMap >= this.maps.length) {
+        this.gameEnded = true;
+      } else this.reset();
     }
   }
 
   //displaying all the game elements
   display() {
-    this.update();
+    !this.gameEnded && this.update();
 
     this.blocks.forEach((block) => {
       if (block.type == 2 && this.key) block.type = 10;

@@ -111,17 +111,6 @@ roomSocket.on("connection", (socket) => {
   console.log("We have a new client: " + socket.id);
   if (socket.room && rooms[socket.room] == null) {
     roomSocket.in(socket.room).emit("roomEnded");
-
-    // interval = setInterval(() => {
-    //   updateGame(socket.room);
-    // }, 1000 / 60);
-    // rooms[socket.room] = {
-    //   numberOfPlayers: 1,
-    //   roomNumber: socket.room,
-    //   currentLvl: 1,
-    //   players: [],
-    //   game: new Game(hei, wid, map1),
-    // };
   } else if (rooms[socket.room]) rooms[socket.room].numberOfPlayers++;
   socket.on("room", function (data) {
     let roomName = data.room;
@@ -132,16 +121,7 @@ roomSocket.on("connection", (socket) => {
     if (rooms[socket.room] == null) {
       roomSocket.in(data.room).emit("roomEnded");
       clearInterval(interval);
-    }
-    // rooms[socket.room] = {
-    //   numberOfPlayers: 1,
-    //   roomNumber: data.room,
-    //   currentLvl: 1,
-    //   players: [],
-    //   game: new Game(hei, wid, map1),
-    // };
-    // else rooms[socket.room].numberOfPlayers++;
-    else {
+    } else {
       rooms[socket.room].numberOfPlayers++;
       roomSocket.to(socket.id).emit("playerConnected", {
         connected: rooms[socket.room].numberOfPlayers,
@@ -180,10 +160,14 @@ roomSocket.on("connection", (socket) => {
   socket.on("keyPressed", (data) => {
     // console.log(rooms[socket.room].game.players[0].position);
     if (data.key == "d" || data.key == "D" || data.key == "ArrowRight") {
-      rooms[socket.room].game.players[data.player].keys.right = true;
+      rooms[socket.room]
+        ? (rooms[socket.room].game.players[data.player].keys.right = true)
+        : console.log("no room");
     }
     if (data.key == "a" || data.key == "A" || data.key == "ArrowLeft") {
-      rooms[socket.room].game.players[data.player].keys.left = true;
+      rooms[socket.room]
+        ? (rooms[socket.room].game.players[data.player].keys.left = true)
+        : console.log("no room");
     }
     if (
       data.key == "w" ||
@@ -191,16 +175,22 @@ roomSocket.on("connection", (socket) => {
       data.key == "ArrowUp" ||
       data.key == " "
     ) {
-      rooms[socket.room].game.players[data.player].keys.jump = true;
+      rooms[socket.room]
+        ? (rooms[socket.room].game.players[data.player].keys.jump = true)
+        : console.log("no room");
     }
   });
 
   socket.on("keyReleased", (data) => {
     if (data.key == "d" || data.key == "D" || data.key == "ArrowRight") {
-      rooms[socket.room].game.players[data.player].keys.right = false;
+      rooms[socket.room]
+        ? (rooms[socket.room].game.players[data.player].keys.right = false)
+        : console.log("no room");
     }
     if (data.key == "a" || data.key == "A" || data.key == "ArrowLeft") {
-      rooms[socket.room].game.players[data.player].keys.left = false;
+      rooms[socket.room]
+        ? (rooms[socket.room].game.players[data.player].keys.left = false)
+        : console.log("no room");
     }
     if (
       data.key == "w" ||
@@ -208,7 +198,9 @@ roomSocket.on("connection", (socket) => {
       data.key == "ArrowUp" ||
       data.key == " "
     ) {
-      rooms[socket.room].game.players[data.player].keys.jump = false;
+      rooms[socket.room]
+        ? (rooms[socket.room].game.players[data.player].keys.jump = false)
+        : console.log("no room");
     }
   });
 
@@ -240,6 +232,7 @@ function updateGame(roomName) {
       },
       key: rooms[roomName].game.key,
       lvl: rooms[roomName].game.currentMap,
+      end: rooms[roomName].game.gameEnded,
     });
 
   rooms[roomName] && rooms[roomName].game.display();

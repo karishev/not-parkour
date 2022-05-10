@@ -74,6 +74,8 @@ function preload() {
 
 socket.on("heartbeat", (players) => game && updatePlayers(players));
 
+let count = 0;
+
 function updatePlayers(players) {
   game.players[0].position = players.player1.pos;
   game.players[0].facing = players.player1.facing;
@@ -83,6 +85,10 @@ function updatePlayers(players) {
   if (game.currentLvl != players.lvl) {
     game.currentLvl = players.lvl;
     game.reset();
+  }
+  if (players.end && count == 0) {
+    alert("game finished");
+    count++;
   }
 }
 

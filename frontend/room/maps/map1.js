@@ -66,4 +66,4 @@ const map4 = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
-const maps = [map1, map2, map3, map4];
+const maps = [map2, map3, map4, map1];
