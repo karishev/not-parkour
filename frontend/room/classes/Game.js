@@ -53,7 +53,7 @@ class Game {
   //waiting for players screen
   waiting() {
     let num = 70;
-    fill(70, 228, 49);
+    fill(0);
     square(num, num, (wid - num * 4) / 2);
     square((wid - num * 2) / 2 + num * 2, num, (wid - num * 4) / 2);
     image(

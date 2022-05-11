@@ -45,10 +45,10 @@ window.addEventListener("load", () => {
     });
   });
 });
-
+let clsBtn = document.getElementById("clsBtn");
 window.addEventListener("click", (e) => {
   let musica = document.querySelector(".musica");
-  musica.play();
+  // musica.play();
 });
 
 function displayInstructions() {

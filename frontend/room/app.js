@@ -119,7 +119,7 @@ function preload() {
   mainFont = loadImage("/room/images/you.png");
 
   pause = loadImage("/room/images/pause.png");
-  // song = loadSound("/room/sounds/menu__music.mp3");
+  song = loadSound("/room/sounds/menu__music.mp3");
 }
 
 socket.on("heartbeat", (players) => game && updatePlayers(players));
@@ -148,6 +148,8 @@ function updatePlayers(players) {
 }
 
 function setup() {
+  song.setVolume(0.5);
+  song.loop();
   createCanvas(wid, hei);
   console.log(dimension);
   game = new Game(height, width, maps, dimension);

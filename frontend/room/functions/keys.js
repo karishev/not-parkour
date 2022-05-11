@@ -1,4 +1,5 @@
 function keyPressed() {
+  
   game.started && socket.emit("keyPressed", { player: playerNumber, key: key });
   switch (keyCode) {
     case LEFT_ARROW:
