@@ -5,13 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="index__style.css" />
+    <!-- <script src="p5.sound.min.js"></script> -->
     <title>NotParkour</title>
   </head>
 
   <body>
+    <audio autoplay="autoplay" loop="loop" class="musica">
+      <source src="/sounds/menu__music.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
     <h1>NotParkour</h1>
     <h2>This is definitely not a parkour game.</h2>
-    <div class="form" >
+    <div class="form">
       <!-- <label for="room__name">Room Name:</label> -->
       <input
         type="text"
@@ -21,7 +26,7 @@
         placeholder="please enter your room name"
         required
       /><br /><br />
-      <input type="submit" value="join room" id="join" />
+      <input type="submit" value="join room" id="joining" />
       <input type="submit" value="create room" id="create" />
     </div>
     <div class="menu__container">
@@ -52,7 +57,7 @@
       </button>
     </div>
     <div class="instructions__popup" id="popup__image" style="display: none">
-      <img src="../images/instructions.png" width="50%" height="auto" />
+      <img src="../images/instruction.png" width="50%" height="auto" />
     </div>
 
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>

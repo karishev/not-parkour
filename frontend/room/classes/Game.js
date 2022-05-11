@@ -53,7 +53,7 @@ class Game {
   //waiting for players screen
   waiting() {
     let num = 70;
-    fill(255);
+    fill(70, 228, 49);
     square(num, num, (wid - num * 4) / 2);
     square((wid - num * 2) / 2 + num * 2, num, (wid - num * 4) / 2);
     image(
@@ -98,5 +98,14 @@ class Game {
         else if (block.type == 4 && this.key) block.type = 10;
         else if (block.type != 10) block.display();
       });
+
+    this.started &&
+      image(
+        pause,
+        this.size * 23,
+        this.size + 10,
+        this.size - 10,
+        this.size - 10
+      );
   }
 }

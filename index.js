@@ -31,10 +31,12 @@ io = new io.Server(server);
 
 //private room
 let roomSocket = io.of("/room");
+let serverSocket = io.of("/servers");
 
 //all the rooms information
 
 let rooms = {};
+let dataRooms = {};
 
 //room should consist of this properties:
 //type room = {
@@ -176,6 +178,11 @@ roomSocket.on("connection", (socket) => {
     }
   });
 
+  socket.on("restart", () => {
+    roomSocket.in(socket.room).emit("restart");
+    rooms[socket.room].game.reset();
+  });
+
   socket.on("disconnect", () => {
     rooms[socket.room] && rooms[socket.room].numberOfPlayers--;
     rooms[socket.room]
@@ -209,4 +216,33 @@ function updateGame(roomName) {
     });
 
   rooms[roomName] && rooms[roomName].game.display();
+}
+
+let serverInterval;
+serverSocket.on("connection", (socket) => {
+  serverSocket.to(socket.id).emit("servers", rooms);
+
+  serverInterval = setInterval(() => {
+    serversData(socket.id);
+  }, 3000);
+
+  socket.on("disconnect", () => {
+    clearInterval(serverInterval);
+  });
+});
+
+function serversData(id) {
+  let data = [];
+  for (const [key, value] of Object.entries(rooms)) {
+    if (value.numberOfPlayers == 2) continue;
+    let type = {
+      roomName: 0,
+      numberOfPlayers: 0,
+    };
+    type.roomName = key;
+    type.numberOfPlayers = value.numberOfPlayers;
+    data.push(type);
+  }
+
+  serverSocket.to(id).emit("servers", data);
 }

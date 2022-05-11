@@ -1,0 +1,92 @@
+:root {
+  --white: #e8e9ea;
+  --green: #46e431;
+  --darker-green: #56924e;
+  --darker-yellow: #f1ff74;
+  --brown: #ce942f;
+  --darker-brown: #6a4718;
+  --blue: #9c98f6;
+  --darker-blue: #173863;
+  --darkest-brown: rgb(83, 51, 27);
+  --light-brown: #d2a98b;
+  --light-green: #87c75f;
+}
+
+@font-face {
+  font-family: disposableDroid;
+  src: url(../../fonts/DisposableDroidBB.ttf);
+}
+
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  /* background-color: var(--white); */
+  text-align: center;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+#window__menu {
+  background-color: var(--darker-brown);
+  width: 750px;
+  height: 375px;
+  margin: auto;
+  background-image: url(../images/background_pause.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#popup__menu {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#popup__menu h1 {
+  font-size: 5vw;
+  margin-top: 10%;
+  font-weight: 900;
+  margin-bottom: 0;
+  font-family: "disposableDroid", sans-serif;
+  color: var(--green);
+}
+
+#window__menu button {
+  /* all: unset; */
+  background-color: var(--light-brown);
+  font-family: "disposableDroid", sans-serif;
+  color: var(--darkest-brown);
+  border: 6px solid var(--darkest-brown);
+  font-weight: 400;
+  font-size: 2vw;
+  text-transform: uppercase;
+  margin: 12px;
+  padding: 10px;
+  width: 75%;
+}
+
+#window__menu button:nth-child(4) {
+  margin: 40px;
+}
+
+#window__menu button:hover {
+  cursor: pointer;
+  /* transition: 0.4s; */
+  background-color: var(--light-green);
+  border: 6px solid var(--white);
+  color: var(--white);
+}
+
+.instructions__popup {
+  z-index: 1;
+  position: absolute;
+  bottom: 20%;
+  display: none;
+}

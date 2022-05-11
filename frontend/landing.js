@@ -1,9 +1,11 @@
 window.addEventListener("load", () => {
+  // let musica = document.querySelector(".musica");
+  // musica.play();
   let socket = io();
   sessionStorage.setItem("room", 12324);
   //   sessionStorage.setItem("id", socket.id);
   let roomNumber = document.getElementById("room__name");
-  const joining = document.getElementById("join");
+  const joining = document.getElementById("joining");
   const creating = document.getElementById("create");
 
   joining.addEventListener("click", () => {
@@ -44,6 +46,11 @@ window.addEventListener("load", () => {
   });
 });
 
+window.addEventListener("click", (e) => {
+  let musica = document.querySelector(".musica");
+  musica.play();
+});
+
 function displayInstructions() {
   instructions = document.getElementById("popup__image");
   if (instructions.style.display == "none") {
@@ -58,4 +65,8 @@ function displayInstructions() {
     document.getElementById("instructions__btn").style.color =
       "var(--darker-brown)";
   }
+}
+
+function displayServers() {
+  window.location.href = "/servers";
 }

@@ -1,3 +1,42 @@
+//functions for the pause
+
+function openPause() {
+  pauseDisplay = document.getElementById("popup__menu");
+
+  if (pauseDisplay.style.display == "none") {
+    pauseDisplay.style.display = "block";
+  } else if ((pauseDisplay.style.display = "block")) {
+    pauseDisplay.style.display = "none";
+  }
+}
+
+function closePause() {
+  pauseDisplay = document.getElementById("popup__menu");
+  pauseDisplay.style.display = "none";
+}
+
+function restartGame() {
+  socket.emit("restart");
+  pauseDisplay = document.getElementById("popup__menu");
+  pauseDisplay.style.display = "none";
+  // game.reset();
+}
+
+function mainMenu() {
+  let loc = String(window.location.href);
+  window.location.href = loc.slice(0, loc.indexOf("room"));
+  // window.location.href = "/";
+}
+
+function displayInstructions() {
+  instructions = document.getElementById("popup__image");
+  if (instructions.style.display == "none") {
+    instructions.style.display = "block";
+  } else if ((instructions.style.display = "block")) {
+    instructions.style.display = "none";
+  }
+}
+
 //add the socket connection on load of the page
 
 let socket = io("/room");
@@ -56,6 +95,10 @@ let backGround;
 
 let mainFont;
 
+let pause;
+
+let song;
+
 function preload() {
   charactersLefts[1] = loadImage("/room/images/character2_left.png");
   charactersRights[1] = loadImage("/room/images/character2_right.png");
@@ -74,6 +117,9 @@ function preload() {
   backGround = loadImage("/room/images/background.png");
 
   mainFont = loadImage("/room/images/you.png");
+
+  pause = loadImage("/room/images/pause.png");
+  // song = loadSound("/room/sounds/menu__music.mp3");
 }
 
 socket.on("heartbeat", (players) => game && updatePlayers(players));
@@ -97,7 +143,7 @@ function updatePlayers(players) {
   if (!game.started && players.num == 2) {
     let damn = setTimeout(() => {
       game.started = true;
-    }, 3000);
+    }, 2000);
   }
 }
 
@@ -106,6 +152,10 @@ function setup() {
   console.log(dimension);
   game = new Game(height, width, maps, dimension);
   socket.on("heartbeat", (players) => game && updatePlayers(players));
+
+  socket.on("restart", () => {
+    game.reset();
+  });
 
   //if the room ends of one of the players disconnects we move them back to the main menu,
   //since it would be impossible to reconnect to the room
@@ -119,24 +169,21 @@ function setup() {
     let loc = String(window.location.href);
     window.location.href = loc.slice(0, loc.indexOf("room"));
   });
-
-  //if there are 2 players in the room, we can start the game
-  // socket.on("startGame", () => {
-  //   setTimeout(() => {
-  //     game.started = true;
-  //   }, 3000);
-  // });
 }
 
 function draw() {
   image(backGround, 0, 0, wid, hei);
-  // background(0);
   game.display();
 }
 
-function mouseClicked() {
-  !game.started &&
-    socket.emit("choosingCharacter", {
-      mousePos: mouseX,
-    });
+function mousePressed() {
+  if (
+    mouseX >= 1324 &&
+    mouseX <= 1324 + 48 &&
+    mouseY >= 68 &&
+    mouseY <= 68 + 48
+  ) {
+    openPause();
+  }
+  // 1324.8 67.6 47.6 47.6
 }
