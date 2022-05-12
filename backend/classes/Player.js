@@ -24,6 +24,7 @@ class Player {
     this.facing = "right";
     this.ground = ground;
     this.onGround = false;
+    this.jumped = 0;
     this.num = num;
     this.second = second;
     this.blocks = blocks;
@@ -66,6 +67,7 @@ class Player {
     } else if (this.position.y + this.side >= this.ground) {
       this.position.y = this.ground - this.side;
       this.onGround = true;
+      // this.jumped = false;
       this.highestPoint = this.ground;
       this.velocity.y = 0;
     } else {
@@ -88,6 +90,7 @@ class Player {
       this.velocity = createVector(0, -speed);
     }
     this.onGround = false;
+    this.jumped += 1;
   }
 
   //checking the horizontal collisions

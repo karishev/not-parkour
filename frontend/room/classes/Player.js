@@ -13,6 +13,7 @@ class Player {
     this.facing = "right";
     this.ground = ground;
     this.onGround = false;
+    this.jumped = 0;
     this.num = num;
   }
 

@@ -1,5 +1,9 @@
+let clickSound = document.querySelector(".click");
+
 window.addEventListener("load", () => {
-  // let musica = document.querySelector(".musica");
+  clickSound = document.querySelector(".click");
+  let musica = document.querySelector(".musica");
+  musica.volume = 0.5;
   // musica.play();
   let socket = io();
   sessionStorage.setItem("room", 12324);
@@ -9,6 +13,7 @@ window.addEventListener("load", () => {
   const creating = document.getElementById("create");
 
   joining.addEventListener("click", () => {
+    clickSound.play();
     if (roomNumber.value == "") {
       alert("write a room name");
       return;
@@ -28,6 +33,7 @@ window.addEventListener("load", () => {
   });
 
   creating.addEventListener("click", () => {
+    clickSound.play();
     if (roomNumber.value == "") {
       alert("write a room name");
       return;
@@ -45,13 +51,11 @@ window.addEventListener("load", () => {
     });
   });
 });
-let clsBtn = document.getElementById("clsBtn");
-window.addEventListener("click", (e) => {
-  let musica = document.querySelector(".musica");
-  // musica.play();
-});
 
 function displayInstructions() {
+  clickSound.play();
+  let musica = document.querySelector(".musica");
+  musica.play();
   instructions = document.getElementById("popup__image");
   if (instructions.style.display == "none") {
     instructions.style.display = "block";
@@ -64,6 +68,23 @@ function displayInstructions() {
       "var(--brown)";
     document.getElementById("instructions__btn").style.color =
       "var(--darker-brown)";
+  }
+}
+
+function switchMusic() {
+  clickSound.play();
+  let musicOn = document.querySelector(".musicOn");
+  let musicOff = document.querySelector(".musicOff");
+  let musica = document.querySelector(".musica");
+
+  if (musicOn.style.display == "none") {
+    musicOff.style.display = "none";
+    musicOn.style.display = "block";
+    musica.muted = false;
+  } else {
+    musicOff.style.display = "block";
+    musicOn.style.display = "none";
+    musica.muted = true;
   }
 }
 

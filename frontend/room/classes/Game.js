@@ -14,6 +14,8 @@ class Game {
     this.started = false; //
     this.maps = maps;
     this.currentLvl = 0;
+    this.music = true;
+    this.won = false;
   }
 
   //initializing the blocks into the array given the number in the map
@@ -74,24 +76,38 @@ class Game {
     playerNumber == 0
       ? image(mainFont, num * 4, num * 8, num * 2, num)
       : image(mainFont, wid - num * 6, num * 8, num * 2, num);
+
+    playerNumber == 0
+      ? image(waitingText, wid - num * 8, num * 8, num * 6, num)
+      : image(waitingText, num * 2, num * 8, num * 6, num);
   }
 
+  //reseting the level or moving to the next one
   reset() {
     this.blocks = this.initializeMap(this.maps[this.currentLvl]);
     this.key = false;
     this.lvlFinished = false;
   }
 
+  //in case the players won the game, here is the screen for it
+  winScreen() {
+    backGround = winscreen;
+    // image(winscreen, 0, 0, wid, hei);
+    image(returnBtn, 320, 270, 120, 100);
+  }
+
   //displaying all the game elements
   display() {
-    !this.started && this.waiting();
+    !this.started && !this.won && this.waiting();
 
     this.started &&
+      !this.won &&
       this.players.forEach((player) => {
         player.display();
       });
 
     this.started &&
+      !this.won &&
       this.blocks.forEach((block) => {
         if (block.type == 2 && this.key) block.type = 10;
         else if (block.type == 3 && this.key) block.type = 25;
@@ -100,6 +116,7 @@ class Game {
       });
 
     this.started &&
+      !this.won &&
       image(
         pause,
         this.size * 23,
@@ -107,5 +124,26 @@ class Game {
         this.size - 10,
         this.size - 10
       );
+    this.started &&
+      !this.won &&
+      this.music &&
+      image(
+        musicOn,
+        this.size * 22,
+        this.size + 10,
+        this.size - 10,
+        this.size - 10
+      );
+    this.started &&
+      !this.won &&
+      !this.music &&
+      image(
+        musicOff,
+        this.size * 22,
+        this.size + 10,
+        this.size - 10,
+        this.size - 10
+      );
+    this.won && this.winScreen();
   }
 }

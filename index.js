@@ -204,10 +204,12 @@ function updateGame(roomName) {
       player1: {
         pos: rooms[roomName].game.players[0].position,
         facing: rooms[roomName].game.players[0].facing,
+        jumped: rooms[roomName].game.players[0].jumped,
       },
       player2: {
         pos: rooms[roomName].game.players[1].position,
         facing: rooms[roomName].game.players[1].facing,
+        jumped: rooms[roomName].game.players[1].jumped,
       },
       key: rooms[roomName].game.key,
       lvl: rooms[roomName].game.currentMap,

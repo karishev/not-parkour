@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="index__style.css" />
-
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
     <!-- <script src="p5.sound.min.js"></script> -->
     <title>NotParkour</title>
   </head>
@@ -15,6 +15,27 @@
       <source src="/sounds/menu__music.mp3" type="audio/mpeg" />
       Your browser does not support the audio element.
     </audio>
+
+    <audio class="click">
+      <source src="/sounds/click.mp3" type="audio/mpeg" />
+    </audio>
+
+    <div class="musicController" onclick="switchMusic()">
+      <img
+        src="../images/music__on.png"
+        width="40px"
+        height="auto"
+        class="musicOn"
+      />
+      <img
+        src="../images/music__off.png"
+        width="45px"
+        height="auto"
+        class="musicOff"
+        style="display: none"
+      />
+    </div>
+
     <h1>NotParkour</h1>
     <h2>This is definitely not a parkour game.</h2>
     <div class="form">
@@ -40,18 +61,20 @@
         join a server
       </button>
       <br /><br />
-      <button
+      <!-- <button
         class="scoreboard__btn"
+           
         type="button"
         onclick="displayScoreboard()"
       >
         scoreboard
-      </button>
-      <br /><br />
+      </button> -->
+      <!-- <br /><br /> -->
       <button
         class="instructions__btn"
         id="instructions__btn"
         type="button"
+        style="position: relative"
         onclick="displayInstructions()"
       >
         instructions

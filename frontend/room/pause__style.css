@@ -50,7 +50,7 @@ body {
 }
 
 #popup__menu h1 {
-  font-size: 5vw;
+  font-size: 70px;
   margin-top: 10%;
   font-weight: 900;
   margin-bottom: 0;
@@ -65,7 +65,7 @@ body {
   color: var(--darkest-brown);
   border: 6px solid var(--darkest-brown);
   font-weight: 400;
-  font-size: 2vw;
+  font-size: 30px;
   text-transform: uppercase;
   margin: 12px;
   padding: 10px;
@@ -74,6 +74,7 @@ body {
 
 #window__menu button:nth-child(4) {
   margin: 40px;
+  position: relative;
 }
 
 #window__menu button:hover {
@@ -85,8 +86,19 @@ body {
 }
 
 .instructions__popup {
+  width: 600px;
+  border: 1px solid black;
   z-index: 1;
+  left: -24px;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: -120px;
   position: absolute;
-  bottom: 20%;
-  display: none;
+}
+
+#clsBtn {
+  position: absolute;
+  right: 5px;
+  top: 5px;
 }

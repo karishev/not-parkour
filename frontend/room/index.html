@@ -4,28 +4,30 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
     <link rel="stylesheet" href="pause__style.css" />
     <title>NotParkour</title>
   </head>
   <body>
-    
     <div id="popup__menu" style="display: none;">
       <h1>PAUSE</h1>
       <div id="window__menu">
-          <!-- <h2>PAUSE</h2> -->
           <button name="resume__btn" id="resume__btn" onclick="closePause()">resume</button>
 
           <button name="restart__btn" id="restart__btn" onclick="restartGame()">restart</button>
 
           <button name="backMenu__btn" id="backMenu__btn" onclick="mainMenu()">back to main menu</a></button>
 
-          <button name="instructions__btn" id="instructions__btn" onclick="displayInstructions()">instructions</button>
+          <button name="instructions__btn" id="instructions__btn" onclick="displayInstructions()">instructions
+            <div class="instructions__popup" id="popup__image" style="display: none;">
+              <img src="/images/instruction.png" width="600px" height="auto">
+              <div id="clsBtn"><img src="/images/close.png" width="25px" /></div></div> 
+            </button>
       </div>
 
   </div>
-  <div class="instructions__popup" id="popup__image" style="display: none;"><img src="/images/instruction.png" width="50%" height="auto"></div>
+  
 
   
     <style>

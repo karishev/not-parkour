@@ -12,8 +12,7 @@ class Door extends Block {
 
   display() {
     if (this.type == 25) {
-      fill(255);
-      rect(this.x, this.y, this.side, this.side);
+      image(doorOpenParts[this.part], this.x, this.y, this.side, this.side);
     } else image(doorParts[this.part], this.x, this.y, this.side, this.side);
   }
 }
