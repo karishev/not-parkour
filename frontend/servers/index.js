@@ -40,7 +40,8 @@ window.addEventListener("load", () => {
         roomNameFull.appendChild(roomName);
 
         let serverInfo = document.createElement("div");
-        serverInfo.innerHTML = `<button class='connectBtn' onclick='redirectServer(${item})'>Connect</button> <h4>1/2</h4>`;
+        // serverInfo.innerHTML = `<button class='connectBtn' onclick='redirectServer(${item})'>Connect</button> <h4>1/2</h4>`;
+        serverInfo.innerHTML = `<button class='connectBtn' onclick=redirectServer('${item}')>Connect</button> <h4>1/2</h4>`;
         serverInfo.classList.add("server__connect");
 
         serverContainer.appendChild(roomNameFull);
