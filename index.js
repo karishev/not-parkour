@@ -96,6 +96,7 @@ io.on("connection", (socket) => {
           players: [],
           game: new Game(hei, wid, maps),
         };
+        dataRooms[data.room] = true;
         interval = setInterval(() => {
           updateGame(data.room);
         }, 1000 / 60);
@@ -125,6 +126,10 @@ roomSocket.on("connection", (socket) => {
       clearInterval(interval);
     } else {
       rooms[socket.room].numberOfPlayers++;
+      if (rooms[socket.room].numberOfPlayers == 2) {
+        console.log("yes");
+        delete dataRooms[socket.room];
+      }
       roomSocket.to(socket.id).emit("playerConnected", {
         connected: rooms[socket.room].numberOfPlayers,
       });
@@ -191,6 +196,7 @@ roomSocket.on("connection", (socket) => {
         ))
       : "";
     delete rooms[socket.room];
+    delete dataRooms[socket.room];
 
     // io.sockets.emit("disconnect", socket.id);
     roomSocket.in(socket.room).emit("roomEnded", { ended: true });
@@ -222,7 +228,7 @@ function updateGame(roomName) {
 
 let serverInterval;
 serverSocket.on("connection", (socket) => {
-  serverSocket.to(socket.id).emit("servers", rooms);
+  serverSocket.to(socket.id).emit("servers", dataRooms);
 
   serverInterval = setInterval(() => {
     serversData(socket.id);
@@ -234,17 +240,6 @@ serverSocket.on("connection", (socket) => {
 });
 
 function serversData(id) {
-  let data = [];
-  for (const [key, value] of Object.entries(rooms)) {
-    if (value.numberOfPlayers == 2) continue;
-    let type = {
-      roomName: 0,
-      numberOfPlayers: 0,
-    };
-    type.roomName = key;
-    type.numberOfPlayers = value.numberOfPlayers;
-    data.push(type);
-  }
-
-  serverSocket.to(id).emit("servers", data);
+  serverSocket.to(id).emit("servers", dataRooms);
+  console.log(dataRooms);
 }
